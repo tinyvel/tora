@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#8a5a1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Étude de la Torah</title>
+<style>
+:root{--bg:#faf6ee;--card:#fff;--tx:#222;--mu:#7a6f5a;--ac:#8a5a1c;--bd:#e5dcc8;--hl:#ffe08a}
+@media(prefers-color-scheme:dark){:root{--bg:#16140f;--card:#211e17;--tx:#eee;--mu:#aaa08c;--ac:#e0b060;--bd:#3a3427;--hl:#6b5316}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px system-ui,sans-serif;touch-action:pan-y;
+-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;
+padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 190px)}
+header{padding:14px 14px 6px;text-align:center}
+h1{margin:0;font-size:1.25rem;color:var(--ac)}
+#sub{color:var(--mu);font-size:.9rem;margin-top:2px}
+#days{display:flex;gap:6px;padding:8px 10px;overflow-x:auto;justify-content:center}
+#days button{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:6px 9px;font-size:.78rem;line-height:1.25}
+#days button.on{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+#days button.today:not(.on){border-color:var(--ac)}
+main{max-width:760px;margin:0 auto;padding:0 10px}
+.v{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin:10px 0}
+.vn{font-size:.75rem;color:var(--mu);margin-bottom:6px}
+.blk{direction:rtl;text-align:right;font-family:"Frank Ruhl Libre","SBL Hebrew","Ezra SIL","Times New Roman",serif}
+.he{font-size:1.45rem;line-height:2}
+.ar,.ra{margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd)}
+.ar{font-size:1.2rem;line-height:1.9;color:var(--ac)}
+.ra{font-size:1.05rem;line-height:1.8}
+.ra p{margin:.3em 0}
+.lab{direction:ltr;text-align:left;font:600 .7rem system-ui,sans-serif;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:block}
+.w.hl{background:var(--hl);border-radius:3px}
+.tap{cursor:pointer;color:var(--ac)!important;text-decoration:underline;padding:6px 4px;display:inline-block}
+.lab.tap{display:block;margin:0}
+.lrow{display:flex;align-items:center;gap:4px;direction:ltr;justify-content:flex-start}
+.lamp{cursor:pointer;font-size:1.15rem;padding:5px 6px;display:inline-block;filter:grayscale(1);opacity:.35;line-height:1}
+.lamp.on{filter:none;opacity:1;text-shadow:0 0 10px #ffc83d}
+#pop{position:fixed;left:0;right:0;bottom:0;background:var(--card);color:var(--tx);border-top:2px solid var(--ac);
+padding:14px 16px calc(14px + env(safe-area-inset-bottom));z-index:10;display:none;max-height:45vh;overflow:auto;box-shadow:0 -6px 20px rgba(0,0,0,.2)}
+#pop .o{direction:rtl;font:1.2rem "SBL Hebrew","Times New Roman",serif;color:var(--ac);margin-bottom:6px}
+#pop .f{font-size:1.1rem;line-height:1.5;white-space:pre-wrap;-webkit-user-select:text;user-select:text}
+#pop small{display:block;color:var(--mu);margin-top:8px;font-size:.7rem}
+#pop .x{position:absolute;top:6px;right:10px;border:0;background:none;color:var(--mu);font-size:1.6rem}
+#ed{display:none;width:100%;min-height:28vh;font:1.05rem/1.5 system-ui,sans-serif;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;-webkit-user-select:text;user-select:text}
+#act{display:none;gap:10px;margin-top:10px}
+#act button{flex:1;border:1px solid var(--ac);background:var(--card);color:var(--ac);border-radius:10px;padding:9px;font-size:.95rem}
+#bk{text-align:center;padding:18px 10px;font-size:.85rem}
+#bk a{color:var(--ac);padding:8px 10px;display:inline-block;text-decoration:underline}
+#msg{text-align:center;padding:30px 16px;color:var(--mu)}
+
+.ohb{cursor:pointer;font:600 .8rem system-ui,sans-serif;color:var(--ac);text-decoration:underline;padding:8px 6px;display:inline-block;line-height:1}
+#oh{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.ohh{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--bd);color:var(--ac)}
+#oh .x{border:0;background:none;font-size:1.8rem;color:var(--mu);padding:0 4px}
+.ohp{flex:1 1 0;overflow-y:auto;padding:10px 14px;min-height:0}
+#ohHe{direction:rtl;text-align:right;font:1.3rem/2 "Frank Ruhl Libre","SBL Hebrew","Times New Roman",serif;border-bottom:2px solid var(--ac)}
+#ohFr{font-size:1.05rem;line-height:1.7}
+.pa p{margin:0 0 .6em}
+#ohn{display:block;color:var(--mu);font-size:.72rem;padding:6px 14px calc(6px + env(safe-area-inset-bottom));border-top:1px solid var(--bd)}
+#oh .w.src{background:var(--hl);border-radius:3px}
+#oh .w.al{background:#4fb3ff66;border-radius:3px;outline:1px solid #4fb3ff}
+#oh .w.ap{background:rgba(150,150,150,.28);border-radius:3px}
+
+.tap.bm{color:#1e6fe0!important}
+@media(prefers-color-scheme:dark){.tap.bm{color:#6aa7ff!important}}
+#bmb{color:var(--ac);text-decoration:underline;font-size:.85rem;cursor:pointer;padding:6px;display:inline-block}
+#bm{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+#bm .x{border:0;background:none;font-size:1.8rem;color:var(--mu);padding:0 4px}
+.bmr{display:flex;align-items:center;gap:8px;padding:10px 2px;border-bottom:1px solid var(--bd)}
+.bmr .i{flex:1;cursor:pointer;line-height:1.4}
+.bmr b{color:#1e6fe0}
+.bmr small{display:block;color:var(--mu)}
+.bmr button{border:0;background:none;color:var(--mu);font-size:1.5rem;padding:4px 8px}
+#toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#222;color:#fff;padding:9px 14px;border-radius:20px;font-size:.9rem;z-index:30;display:none;max-width:90%;text-align:center}
+
+header{position:relative}
+#back{position:absolute;left:6px;top:10px;border:0;background:none;color:var(--ac);font-size:1rem;padding:8px;display:none}
+.hb{display:block;width:100%;text-align:left;padding:16px 16px;margin:10px 0;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;font-size:1.15rem}
+.hb small{display:block;color:var(--mu);font-size:.8rem;margin-top:3px}
+.hb .he{float:right;font-family:"Frank Ruhl Libre","SBL Hebrew","Times New Roman",serif;color:var(--ac)}
+#oha{display:flex;gap:10px;padding:8px 14px;border-top:1px solid var(--bd)}
+#oha button{flex:1;border:1px solid var(--ac);background:var(--card);color:var(--ac);border-radius:10px;padding:9px;font-size:.95rem}
+#ohFr textarea{width:100%;min-height:7em;margin:0 0 .6em;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;-webkit-user-select:text;user-select:text}
+</style></head><body>
+<header><button id="back" onclick="history.back()">‹ Retour</button><h1 id="t">Étude de la Torah</h1><div id="sub"></div><a id="bmb" onclick="openBM()">🔖 Marque-pages (<span id="bmc">0</span>)</a></header>
+<div id="days"></div>
+<main id="m"><div id="msg">Chargement…</div></main>
+<footer id="bk"><a onclick="exportC()">⬇ Sauvegarder mes notes, corrections et marque-pages</a><a onclick="importC()">⬆ Restaurer</a></footer>
+<div id="pop"><button class="x" onclick="closePop()" aria-label="Fermer">×</button><div class="o"></div><div class="f"></div><textarea id="ed"></textarea><div id="act"><button id="b1"></button><button id="b2"></button></div><small id="nt">Traduction automatique – à vérifier</small></div>
+<div id="oh"><div class="ohh"><b id="oht"></b><button class="x" onclick="closeOH()" aria-label="Fermer">×</button></div><div class="ohp" id="ohHe"></div><div class="ohp" id="ohFr"></div><div id="oha"><button id="oc1"></button><button id="oc2"></button></div><small id="ohn"></small></div>
+<div id="bm"><div class="ohh"><b>Marque-pages</b><button class="x" onclick="closeBM()" aria-label="Fermer">×</button></div><div class="ohp" id="bml"></div></div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s), API='https://www.sefaria.org/api/';
+const JOURS=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Chabbat'];
+const NOMS=['Rishon','Chéni','Chlichi','Révi’i','Hamichi','Chichi','Chévi’i'];
+const TODAY=new Date().getDay();
+let ALIYOT=[],PAR=null,cur=TODAY,ISWEEK=false,SCREEN='home',CURBOOK=null,WEEK=null,WEEKP=null,WEEKERR='';
+const IDX={};
+const BOOKS=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy'];
+const BOOKHE={Genesis:'בראשית',Exodus:'שמות',Leviticus:'ויקרא',Numbers:'במדבר',Deuteronomy:'דברים'};
+async function j(u){const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+
+function scr(t,sub,o){
+  o=o||{};$('#t').textContent=t;$('#sub').textContent=sub||'';
+  $('#back').style.display=o.back?'block':'none';
+  $('#days').style.display=o.days?'flex':'none';
+  $('#bmb').style.display=o.bm?'inline-block':'none';
+  window.scrollTo(0,0);closePop();
+}
+function go(fn,...a){history.pushState({},'');return fn(...a)}
+window.addEventListener('popstate',()=>goBack());
+function goBack(){
+  if(SCREEN=='parasha'){if(ISWEEK)showHome();else showParashot(CURBOOK)}
+  else if(SCREEN=='plist')showBooks();
+  else if(SCREEN=='books')showHome();
+}
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const refFr=r=>r.replace(/^[A-Za-z ]+(?= \d)/,b=>BOOKFR[b]||b);
+
+function showHome(){
+  SCREEN='home';scr('Étude de la Torah','',{});
+  $('#m').innerHTML='<button class="hb" onclick="go(openWeek)">📖 Paracha de la semaine<small id="wk">Chargement…</small></button>'
+   +'<button class="hb" onclick="go(showBooks)">📚 Houmach<small>Les cinq livres et leurs parachiot</small></button>'
+   +'<button class="hb" onclick="openBM()">🔖 Marque-pages<small id="bmh"></small></button>';
+  wkSub();updBm();
+}
+function wkSub(){
+  const e=$('#wk');if(!e)return;
+  e.textContent=WEEK?parFr(WEEK.item.displayValue.en)+' · '+(WEEK.item.displayValue.he||''):(WEEK===false?'Indisponible – vérifiez la connexion':'Chargement…');
+}
+function showBooks(){
+  SCREEN='books';scr('Houmach','',{back:true});
+  $('#m').innerHTML=BOOKS.map(b=>'<button class="hb" onclick="go(showParashot,\''+b+'\')">'+BOOKFR[b]+'<span class="he">'+BOOKHE[b]+'</span></button>').join('');
+}
+async function showParashot(book){
+  SCREEN='plist';CURBOOK=book;scr(BOOKFR[book],'',{back:true});
+  $('#m').innerHTML='<div id="msg">Chargement…</div>';
+  try{
+    const nodes=await bookNodes(book);
+    if(SCREEN!='plist'||CURBOOK!=book)return;
+    $('#m').innerHTML=nodes.map((n,i)=>'<button class="hb" onclick="go(openList,\''+book+'\','+i+')">'+esc(parFr(n.en))+(n.he?'<span class="he">'+esc(n.he)+'</span>':'')+'<small>'+esc(refFr(n.ref))+'</small></button>').join('');
+  }catch(e){fail(e)}
+}
+async function bookNodes(book){
+  if(IDX[book])return IDX[book];
+  let nodes=[];
+  for(const u of ['v2/index/','v2/raw/index/']){
+    try{
+      const ix=await j(API+u+encodeURIComponent(book));
+      const alts=ix.alts||ix.alt_structs||{};
+      const P=alts.Parasha||Object.values(alts).find(a=>a&&a.nodes&&a.nodes[0]&&a.nodes[0].wholeRef)||{};
+      nodes=(P.nodes||[]).map(n=>{
+        const t=n.titles||[],pk=l=>(t.find(x=>x.lang==l&&x.primary)||t.find(x=>x.lang==l)||{}).text||'';
+        return {en:n.title||pk('en')||n.sharedTitle||'',he:n.heTitle||pk('he')||'',ref:n.wholeRef||'',aliyot:n.refs||[]};
+      }).filter(n=>n.ref);
+      if(nodes.length)break;
+    }catch(e){}
+  }
+  if(!nodes.length)throw new Error('Liste des parachiot introuvable');
+  return IDX[book]=nodes;
+}
+function loadWeek(){
+  return WEEKP=WEEKP||(async()=>{
+    try{
+      const c=await j(API+'calendars?diaspora=1');
+      const it=c.calendar_items.find(x=>x.title.en==='Parashat Hashavua');
+      let al=(it.extraDetails&&it.extraDetails.aliyot)||[];
+      if(al.length<7){const b=it.ref.split(/ \d/)[0];const n=(await bookNodes(b)).find(n=>n.ref===it.ref);al=n?n.aliyot:[]}
+      if(al.length<7)throw new Error('Découpage en 7 blocs introuvable pour '+it.ref);
+      WEEK={item:it,aliyot:al.slice(0,7)};
+    }catch(e){WEEK=false;WEEKERR=e.message;WEEKP=null}
+    wkSub();return WEEK;
+  })();
+}
+async function openWeek(){
+  ISWEEK=true;SCREEN='parasha';scr('Paracha de la semaine','Chargement…',{back:true});
+  $('#m').innerHTML='<div id="msg">Chargement…</div>';
+  const w=await loadWeek();
+  if(!w){fail(new Error(WEEKERR||'Hors connexion'));return}
+  return startParasha(w.item.displayValue.en,w.item.displayValue.he,w.item.ref,w.aliyot,TODAY);
+}
+function openList(book,i){
+  const n=IDX[book][i];ISWEEK=false;CURBOOK=book;
+  if(n.aliyot.length<7){SCREEN='parasha';scr(parFr(n.en),'',{back:true});$('#m').innerHTML='<div id="msg">Découpage en 7 blocs indisponible pour cette parachat.</div>';return}
+  return startParasha(n.en,n.he,n.ref,n.aliyot,0);
+}
+function startParasha(en,he,ref,aliyot,day){
+  SCREEN='parasha';PAR={displayValue:{en,he:he||''},ref};ALIYOT=aliyot.slice(0,7);cur=day;
+  scr(parFr(en)+(he?' · '+he:''),'',{back:true,days:true,bm:true});
+  drawTabs();return load(day);
+}
+function fail(e){$('#m').innerHTML='<div id="msg">Erreur : '+esc(e.message)+'<br>Vérifiez la connexion internet.<br><br><button onclick="location.reload()">Réessayer</button></div>'}
+function drawTabs(){
+  $('#days').innerHTML=JOURS.map((d,i)=>`<button class="${i==cur?'on ':''}${ISWEEK&&i==TODAY?'today':''}" onclick="load(${i})">${d.slice(0,3)}.<br>${i+1}</button>`).join('');
+}
+async function load(i){
+  cur=i;drawTabs();closePop();
+  const ref=ALIYOT[i];
+  $('#sub').textContent=JOURS[i]+' — bloc '+(i+1)+'/7 ('+NOMS[i]+') · '+ref;
+  $('#m').innerHTML='<div id="msg">Chargement du bloc…</div>';
+  try{
+    const mm=ref.match(/^(.+?) (\d+):(\d+)-(?:(\d+):)?(\d+)$/);
+    const book=mm[1],c1=+mm[2],v1=+mm[3],c2=mm[4]?+mm[4]:c1,v2=+mm[5];
+    const get=async n=>{try{const d=await j(API+'texts/'+encodeURIComponent(n)+'?context=0&commentary=0&pad=0');return [].concat(d.he||[])}catch(e){return []}};
+    const getR=async n=>{try{const d=await j(API+'texts/'+encodeURIComponent(n)+'?context=0&commentary=0&pad=0');
+      return {he:[].concat(d.he||[]),en:[].concat(d.text||[]),v:d.versionTitle||'Sefaria'}}catch(e){return {he:[],en:[],v:''}}};
+    const out=document.createDocumentFragment();
+    for(let c=c1;c<=c2;c++){
+      const [hr,ta,rr,oc,sc,ga]=await Promise.all([getR(book+' '+c),get('Onkelos '+book+' '+c),getR('Rashi on '+book+' '+c),getR('Or HaChaim on '+book+' '+c),getR('Siftei Chakhamim, '+book+' '+c),getR('Gur Aryeh on '+book+' '+c)]);
+      const he=hr.he,ra=rr.he,a=c==c1?v1:1,b=c==c2?v2:he.length;
+      for(let v=a;v<=b;v++){
+        const card=document.createElement('div');card.className='v';let ev=[].concat(hr.en[v-1]||[]).flat(9).map(plain).filter(Boolean).join(' ');
+        if((ev.match(/[\u05D0-\u05EA]/g)||[]).length>(ev.match(/[A-Za-z]/g)||[]).length)ev='';
+        card.dataset.ven=ev;card.dataset.venT=hr.v;card.dataset.id=book+' '+c+':'+v;
+        let en=[].concat(rr.en[v-1]||[]).flat(9).map(plain).filter(Boolean).join('\n');
+        if((en.match(/[\u05D0-\u05EA]/g)||[]).length>(en.match(/[A-Za-z]/g)||[]).length)en='';
+        card.dataset.en=en;card.dataset.env=rr.v;
+        const ohH=[].concat(oc.he[v-1]||[]).flat(9).filter(x=>x&&/[\u05D0-\u05EA]/.test(x));
+        const ohE=[].concat(oc.en[v-1]||[]).flat(9).map(plain).filter(x=>x&&(x.match(/[A-Za-z]/g)||[]).length>(x.match(/[\u05D0-\u05EA]/g)||[]).length);
+        const scHe=[].concat(sc.he[v-1]||[]).flat(9),scEn=[].concat(sc.en[v-1]||[]).flat(9);
+        const sx=scHe.map((h,k)=>[h||'',plain(scEn[k]||'')]).filter(x=>/[\u05D0-\u05EA]/.test(x[0]));
+        card.dataset.sc=JSON.stringify(sx.map(x=>x[0]));
+        card.dataset.scen=JSON.stringify(sx.map(x=>((x[1].match(/[A-Za-z]/g)||[]).length>(x[1].match(/[\u05D0-\u05EA]/g)||[]).length)?x[1]:''));
+        card.dataset.scv=sc.v;
+        const gaHe=[].concat(ga.he[v-1]||[]).flat(9),gaEn=[].concat(ga.en[v-1]||[]).flat(9);
+        const gx=gaHe.map((h,k)=>[h||'',plain(gaEn[k]||'')]).filter(x=>/[\u05D0-\u05EA]/.test(x[0]));
+        card.dataset.ga=JSON.stringify(gx.map(x=>x[0]));
+        card.dataset.gaen=JSON.stringify(gx.map(x=>((x[1].match(/[A-Za-z]/g)||[]).length>(x[1].match(/[\u05D0-\u05EA]/g)||[]).length)?x[1]:''));
+        card.dataset.gav=ga.v;
+        card.dataset.oh=JSON.stringify(ohH);card.dataset.ohen=JSON.stringify(ohE);card.dataset.ohv=oc.v;
+        card.innerHTML='<div class="vn"><span class="tap" data-k="v">'+c+':'+v+'</span><span class="lamp" data-n="nv" title="Ma note sur ce verset">💡</span>'+(card.dataset.oh!='[]'?'<span class="ohb" title="Or HaChaïm">O.H.</span>':'')+'</div>';
+        card.append(blk('he','',he[v-1]));
+        const t=ta[v-1];if(t)card.append(blk('ar','Targoum Onkelos (araméen)',t));
+        const r=[].concat(ra[v-1]||[]).flat(9).filter(Boolean);
+        if(r.length)card.append(blk('ra','Rachi',r.map(x=>'<p>'+x+'</p>').join('')));
+        {const row=card.querySelector('.ra .lrow');
+          if(row){
+            if(card.dataset.sc!='[]')row.insertAdjacentHTML('beforeend','<span class="ohb" data-c="sc" title="Siftei Chakhamim">S.H.</span>');
+            if(card.dataset.ga!='[]')row.insertAdjacentHTML('beforeend','<span class="ohb" data-c="ga" title="Gur Aryeh">G.A.</span>');
+          }}
+        out.append(card);
+      }
+    }
+    $('#m').innerHTML='';$('#m').append(out);window.scrollTo(0,0);updLamps();updBm();
+  }catch(e){fail(e)}
+}
+function plain(h){
+  if(!h)return '';
+  const b=new DOMParser().parseFromString('<body>'+h,'text/html').body;
+  b.querySelectorAll('sup,i.footnote,script,style').forEach(e=>e.remove());
+  return b.textContent.replace(/\s+/g,' ').trim();
+}
+function blk(cls,label,html){
+  const d=document.createElement('div');d.className='blk '+cls;
+  if(label)d.innerHTML=cls=='ra'?'<div class="lrow"><span class="lab tap" data-k="ra">'+label+'</span><span class="lamp" data-n="nr" title="Ma note sur Rachi">💡</span></div>':'<span class="lab">'+label+'</span>';
+  const body=new DOMParser().parseFromString('<body>'+(html||''),'text/html').body;
+  body.querySelectorAll('sup,i.footnote,script,style,img,iframe').forEach(e=>e.remove());
+  body.querySelectorAll('*').forEach(e=>[...e.attributes].forEach(a=>e.removeAttribute(a.name)));
+  wrap(body);d.append(...body.childNodes);return d;
+}
+function wrap(n){
+  [...n.childNodes].forEach(c=>{
+    if(c.nodeType==3){
+      const f=document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(t=>{
+        if(/[\u05D0-\u05EA]/.test(t)){const s=document.createElement('span');s.className='w';s.textContent=t;f.append(s)}
+        else f.append(t);
+      });
+      c.replaceWith(f);
+    }else if(c.nodeType==1)wrap(c);
+  });
+}
+
+/* ---------- Traduction ---------- */
+const cache={};
+const clean=s=>s.replace(/\u05BE/g,' ').replace(/[\u0591-\u05C7]/g,'').replace(/[ \t\r\f]+/g,' ').replace(/ ?\n ?/g,'\n').trim();
+async function tr1(s,sl,tl){
+  try{
+    const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+(sl||'auto')+'&tl='+(tl||'fr')+'&dt=t',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'q='+encodeURIComponent(s)});
+    if(!r.ok)throw 0;const d=await r.json();return d[0].map(x=>x[0]).join('');
+  }catch(e){
+    const ch=[];let c='';
+    for(const w of s.split(' ')){if((c+' '+w).length>450){ch.push(c);c=w}else c=c?c+' '+w:w}
+    if(c)ch.push(c);
+    const rs=await Promise.all(ch.map(async x=>(await j('https://api.mymemory.translated.net/get?langpair='+(sl=='en'?'en':sl=='fr'?'fr':'he')+'|'+(tl=='iw'?'he':'fr')+'&q='+encodeURIComponent(x))).responseData.translatedText));
+    return rs.join(' ');
+  }
+}
+async function tr(s,sl,tl){
+  s=clean(s);const ck=(sl||'')+'|'+(tl||'')+'|'+s;if(cache[ck])return cache[ck];
+  const parts=[];
+  for(const l of s.split('\n')){let c='';for(const w of l.split(' ')){if((c+' '+w).length>1200){parts.push(c);c=w}else c=c?c+' '+w:w}if(c)parts.push(c)}
+  return cache[ck]=(await Promise.all(parts.map(x=>tr1(x,sl,tl)))).join('\n');
+}
+let popId=0;
+async function showPop(orig,words,note,src,sl){
+  setAct('none');
+  document.querySelectorAll('.w.hl').forEach(w=>w.classList.remove('hl'));
+  words.forEach(w=>w.classList.add('hl'));
+  const id=++popId,p=$('#pop');
+  p.querySelector('.o').textContent=orig.length>300?orig.slice(0,300)+'…':orig;
+  p.querySelector('.f').textContent='…';$('#nt').textContent=note||'Traduction automatique – à vérifier';p.style.display='block';
+  try{const r=await tr(src||orig,sl);if(id==popId)p.querySelector('.f').textContent=r}
+  catch(e){if(id==popId)p.querySelector('.f').textContent='Traduction indisponible ('+e.message+')'}
+}
+function showFr(orig,words,fr,note){
+  setAct('none');
+  document.querySelectorAll('.w.hl').forEach(w=>w.classList.remove('hl'));
+  words.forEach(w=>w.classList.add('hl'));
+  popId++;const p=$('#pop');
+  p.querySelector('.o').textContent=orig;p.querySelector('.f').textContent=fr;
+  $('#nt').textContent=note||'';p.style.display='block';
+}
+function closePop(){setAct('none');popId++;$('#pop').style.display='none';document.querySelectorAll('.w.hl').forEach(w=>w.classList.remove('hl'))}
+const wordAt=(x,y)=>{const e=document.elementFromPoint(x,y);return e&&e.closest&&e.closest('.w')};
+let LP=0;
+function oneWord(x,y){LP=Date.now();const el=document.elementFromPoint(x,y),tp=el&&el.closest&&el.closest('.tap');if(tp){addBM(tp.closest('.v'));return}const w=wordAt(x,y);if(!w)return;if(w.closest('#oh')){align(w);return}showPop(w.textContent,[w])}
+function zone(r){
+  const ws=[...document.querySelectorAll('.w')].filter(w=>{const b=w.getBoundingClientRect();
+    return b.right>r.l&&b.left<r.r&&b.bottom>r.t&&b.top<r.b&&(Math.min(b.right,r.r)-Math.max(b.left,r.l))*(Math.min(b.bottom,r.b)-Math.max(b.top,r.t))>b.width*b.height*.4});
+  if(!ws.length)return;
+  let txt='',last=null;
+  ws.forEach(w=>{const k=w.closest('.blk');txt+=(last&&k!==last?'\n':' ')+w.textContent;last=k});
+  showPop(txt.trim(),ws);
+}
+
+/* ---------- Appui long d'un doigt sur un mot ---------- */
+let T={tm:null,x:0,y:0,on:false},lastTouch=0;
+document.addEventListener('touchstart',e=>{
+  lastTouch=Date.now();clearTimeout(T.tm);T.on=false;
+  if(e.target.closest('#pop')||e.touches.length!=1)return;
+  const t=e.touches[0];T.x=t.clientX;T.y=t.clientY;T.on=true;
+  T.tm=setTimeout(()=>{if(T.on){T.on=false;oneWord(T.x,T.y);navigator.vibrate&&navigator.vibrate(15)}},450);
+},{passive:true});
+document.addEventListener('touchmove',e=>{lastTouch=Date.now();const t=e.touches[0];
+  if(T.on&&Math.hypot(t.clientX-T.x,t.clientY-T.y)>12){T.on=false;clearTimeout(T.tm)}},{passive:true});
+const stop=()=>{lastTouch=Date.now();T.on=false;clearTimeout(T.tm)};
+document.addEventListener('touchend',stop);document.addEventListener('touchcancel',stop);
+document.addEventListener('contextmenu',e=>e.preventDefault());
+/* souris (ordinateur) */
+let M=null;
+document.addEventListener('mousedown',e=>{if(Date.now()-lastTouch<800||e.target.closest('#pop'))return;
+  const x=e.clientX,y=e.clientY;clearTimeout(M);M=setTimeout(()=>oneWord(x,y),450)});
+document.addEventListener('mousemove',()=>clearTimeout(M));
+document.addEventListener('mouseup',()=>clearTimeout(M));
+
+/* ---------- Corrections personnelles de la traduction de Rachi ---------- */
+const KEY='parachat-corrections';
+const store=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
+const put=o=>{try{localStorage.setItem(KEY,JSON.stringify(o));return true}catch(e){alert('Enregistrement impossible dans ce navigateur.');return false}};
+let CTX=null,MODE='none',PREV='none';
+function setAct(m){
+  MODE=m;const ed=$('#ed'),f=$('#pop .f'),b1=$('#b1'),b2=$('#b2');
+  const E=m=='edit'||m=='note';ed.style.display=E?'block':'none';f.style.display=E?'none':'block';
+  if(m!='note')$('#pop .o').style.direction='';
+  $('#act').style.display=m=='none'?'none':'flex';
+  b2.style.display=m=='view-auto'?'none':'';
+  b1.textContent=E?'Enregistrer':(m=='view-corr'?'✎ Modifier':'✎ Corriger');
+  b2.textContent=m=='edit'?'Annuler':(m=='note'?'Supprimer la note':'↺ Rétablir l’automatique');
+}
+function rashi(card){
+  const b=card.querySelector('.ra'),ws=[...b.querySelectorAll('.w')];
+  const orig=[...b.querySelectorAll('p')].map(p=>p.textContent).join('\n');
+  CTX={card,id:card.dataset.id};
+  const c=store()['ra:'+CTX.id];
+  if(c){showFr(orig,ws,c,'Correction personnelle (enregistrée sur cet appareil)');setAct('view-corr')}
+  else{
+    const en=card.dataset.en;
+    if(en)showPop(orig,ws,'Traduction anglaise de Sefaria ('+card.dataset.env+') traduite automatiquement en français – à vérifier',en,'en');
+    else showPop(orig,ws,'Pas de traduction anglaise de Rachi sur Sefaria pour ce verset – traduction automatique de l’hébreu, à vérifier');
+    setAct('view-auto');
+  }
+}
+let NK='';
+function note(card,kind){
+  NK=kind+':'+card.dataset.id;
+  document.querySelectorAll('.w.hl').forEach(w=>w.classList.remove('hl'));
+  popId++;const p=$('#pop');setAct('note');
+  const o=p.querySelector('.o');o.style.direction='ltr';
+  o.textContent=(kind=='nr'?'Ma note sur Rachi · ':'Ma note · ')+card.dataset.id;
+  $('#ed').value=store()[NK]||'';$('#nt').textContent='Note personnelle – enregistrée sur cet appareil';
+  p.style.display='block';
+}
+function updLamps(){
+  const s=store();
+  document.querySelectorAll('.v').forEach(c=>c.querySelectorAll('.lamp').forEach(l=>l.classList.toggle('on',!!s[l.dataset.n+':'+c.dataset.id])));
+}
+$('#b1').onclick=()=>{
+  if(MODE=='note'){const v=$('#ed').value.trim(),s=store();
+    if(v)s[NK]=v;else delete s[NK];
+    if(put(s)){updLamps();closePop()}return}
+  if(MODE=='edit'){
+    const v=$('#ed').value.trim(),s=store();
+    if(v)s['ra:'+CTX.id]=v;else delete s['ra:'+CTX.id];
+    if(put(s))rashi(CTX.card);
+  }else{
+    const f=$('#pop .f').textContent;if(f=='…')return;
+    $('#ed').value=f;PREV=MODE;setAct('edit');
+  }
+};
+$('#b2').onclick=()=>{
+  if(MODE=='note'){const s=store();delete s[NK];if(put(s)){updLamps();closePop()}return}
+  if(MODE=='edit')setAct(PREV);
+  else{const s=store();delete s['ra:'+CTX.id];if(put(s))rashi(CTX.card)}
+};
+function exportC(){
+  const b=new Blob([JSON.stringify(store(),null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='notes-corrections-parachat.json';a.click();
+}
+function importC(){
+  const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
+  i.onchange=async()=>{try{
+    const o=JSON.parse(await i.files[0].text()),cur=store();
+    const bm=[...(cur.bm||[]),...(o.bm||[])].filter((b,k,a)=>a.findIndex(x=>x.id==b.id)==k);
+    if(put(Object.assign(cur,o,{bm}))){updLamps();updBm();alert('Données restaurées : '+Object.keys(o).length+' éléments')}
+  }catch(e){alert('Fichier invalide')}};
+  i.click();
+}
+
+/* ---------- Or HaChaïm : fenêtre hébreu / français avec alignement ---------- */
+function cleanBody(html){
+  const b=new DOMParser().parseFromString('<body>'+html,'text/html').body;
+  b.querySelectorAll('sup,i.footnote,script,style,img,iframe').forEach(e=>e.remove());
+  b.querySelectorAll('*').forEach(e=>[...e.attributes].forEach(a=>e.removeAttribute(a.name)));
+  wrap(b);return b;
+}
+function wrapFr(p,t){
+  (t.match(/[\p{L}\p{M}0-9’'-]+|[^\p{L}\p{M}0-9’'-]+/gu)||[]).forEach(x=>{
+    if(/^[\p{L}\p{M}0-9’'-]+$/u.test(x)){const s=document.createElement('span');s.className='w fr';s.textContent=x;p.append(s)}
+    else p.append(x);
+  });
+}
+let OHC=null,OHM='view-auto';
+function ohAct(m){
+  OHM=m;$('#oc1').textContent=m=='edit'?'Enregistrer':(m=='view-corr'?'✎ Modifier':'✎ Corriger');
+  const b=$('#oc2');b.style.display=m=='view-auto'?'none':'';
+  b.textContent=m=='edit'?'Annuler':'↺ Rétablir l’automatique';
+}
+function ohRender(){
+  const F=$('#ohFr');F.innerHTML='';
+  OHC.texts.forEach((t,i)=>{
+    const f=document.createElement('div');f.className='pa';f.dataset.i=i;
+    String(t).split('\n').forEach(line=>{const p=document.createElement('p');wrapFr(p,line);f.append(p)});
+    F.append(f);
+  });
+}
+async function openOH(card,K){
+  K=K||'oh';const NAME={sc:'Siftei Chakhamim',ga:'Gur Aryeh'}[K]||'Or HaChaïm';
+  clearAl();
+  const heL=JSON.parse(card.dataset[K]||'[]'),enL=JSON.parse(card.dataset[K+'en']||'[]');
+  const same=enL.length&&enL.length===heL.length;
+  const groups=same?heL.map((h,i)=>({he:[h],en:[enL[i]]})):[{he:heL,en:enL}];
+  $('#oht').textContent=NAME+' · '+card.dataset.id;
+  const H=$('#ohHe'),F=$('#ohFr');H.innerHTML='';F.innerHTML='';
+  groups.forEach((g,i)=>{
+    const h=document.createElement('div');h.className='pa';h.dataset.i=i;
+    g.he.forEach(x=>{const p=document.createElement('p');p.append(...cleanBody(x).childNodes);h.append(p)});
+    H.append(h);
+    const f=document.createElement('div');f.className='pa';f.dataset.i=i;f.textContent='…';F.append(f);
+  });
+  const ctx=OHC={card,K,groups,texts:groups.map(()=>''),key:'c'+K+':'+card.dataset.id,corr:false};
+  const hint=' Appui long sur un mot : mise en évidence approximative de son équivalent.';
+  $('#oh').style.display='flex';H.scrollTop=0;F.scrollTop=0;
+  const corr=store()[ctx.key];
+  if(Array.isArray(corr)&&corr.length==groups.length){
+    ctx.texts=corr.slice();ctx.corr=true;ohRender();ohAct('view-corr');
+    $('#ohn').textContent='Traduction corrigée par vous (enregistrée sur cet appareil).'+hint;return;
+  }
+  ohAct('view-auto');
+  const nEn=enL.filter(Boolean).length;
+  $('#ohn').textContent=(nEn==0?'Pas d’anglais sur Sefaria pour ce passage – français : traduction automatique de l’hébreu.'
+    :nEn==enL.length?'Français : traduction automatique de l’anglais de Sefaria ('+card.dataset[K+'v']+').'
+    :'Français : traduction automatique de l’anglais de Sefaria quand il existe, sinon de l’hébreu.')+hint;
+  await Promise.all(groups.map(async(g,i)=>{
+    const f=F.querySelector('.pa[data-i="'+i+'"]');
+    try{
+      const e=g.en.join('\n').trim();const txt=e?await tr(e,'en'):await tr(g.he.map(plain).join('\n'));
+      if(OHC!==ctx)return;
+      ctx.texts[i]=txt;f.innerHTML='';
+      txt.split('\n').forEach(line=>{const p=document.createElement('p');wrapFr(p,line);f.append(p)});
+    }catch(e){if(OHC===ctx&&f)f.textContent='Traduction indisponible ('+e.message+')'}
+  }));
+}
+$('#oc1').onclick=()=>{
+  if(!OHC)return;
+  if(OHM=='edit'){
+    const ts=[...$('#ohFr').querySelectorAll('textarea')].map(t=>t.value.trim()),s=store();
+    if(ts.some(Boolean)){s[OHC.key]=ts;OHC.corr=true}else{delete s[OHC.key];OHC.corr=false}
+    if(!put(s))return;
+    if(OHC.corr){OHC.texts=ts;ohRender();ohAct('view-corr');$('#ohn').textContent='Traduction corrigée par vous (enregistrée sur cet appareil).'}
+    else openOH(OHC.card,OHC.K);
+    return;
+  }
+  if(!OHC.texts.every(Boolean)){toast('Traduction en cours…');return}
+  clearAl();const F=$('#ohFr');F.innerHTML='';
+  OHC.texts.forEach(t=>{const ta=document.createElement('textarea');ta.value=t;F.append(ta)});
+  ohAct('edit');
+};
+$('#oc2').onclick=()=>{
+  if(!OHC)return;
+  if(OHM=='edit'){ohRender();ohAct(OHC.corr?'view-corr':'view-auto');return}
+  const s=store();delete s[OHC.key];if(put(s))openOH(OHC.card,OHC.K);
+};
+function closeOH(){$('#oh').style.display='none';clearAl()}
+function clearAl(){document.querySelectorAll('#oh .w').forEach(w=>w.classList.remove('src','al','ap'))}
+const nf=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const FIN={'ך':'כ','ם':'מ','ן':'נ','ף':'פ','ץ':'צ'};
+const hb=s=>s.replace(/[\u0591-\u05C7]/g,'').replace(/[^\u05D0-\u05EA]/g,'').replace(/[ךםןףץ]/g,c=>FIN[c]);
+const STOP=new Set('le la les un une des du de au aux et en dans que qui ne pas pour par sur avec son sa ses ce cet cette ces il elle ils elles se lui leur est sont a ont ou mais comme plus qu'.split(' '));
+function forms(w){const o=[w];let x=w;for(let i=0;i<2&&x.length>3&&'והבלמכש'.includes(x[0]);i++){x=x.slice(1);o.push(x)}return o}
+function nearest(list,pos){let b=null,d=1e9;list.forEach(([j,w])=>{const e=Math.abs(j-pos);if(e<d){d=e;b=w}});return b}
+async function align(w){
+  clearAl();
+  const fromHe=!!w.closest('#ohHe'),pa=w.closest('.pa'),i=pa.dataset.i;
+  const other=$(fromHe?'#ohFr':'#ohHe').querySelector('.pa[data-i="'+i+'"]');
+  w.classList.add('src');if(!other)return;
+  const mine=[...pa.querySelectorAll('.w')],theirs=[...other.querySelectorAll('.w')];
+  if(!theirs.length)return;
+  const pos=mine.indexOf(w)/mine.length*theirs.length;
+  let hit=null;
+  try{
+    let cand;
+    if(fromHe){
+      const t=nf(await tr(w.textContent));
+      const toks=t.split(/[^a-z0-9]+/).filter(x=>x.length>=3&&!STOP.has(x));
+      cand=theirs.map((x,j)=>[j,x]).filter(([j,x])=>{const a=nf(x.textContent);
+        return toks.some(c=>a===c||(a.length>=4&&c.length>=4&&(a.startsWith(c.slice(0,5))||c.startsWith(a.slice(0,5)))))});
+    }else{
+      const t=await tr(w.textContent,'fr','iw');
+      const set=new Set(t.split(/\s+/).map(hb).filter(x=>x.length>=2).flatMap(forms));
+      cand=theirs.map((x,j)=>[j,x]).filter(([j,x])=>forms(hb(x.textContent)).some(f=>set.has(f)));
+    }
+    hit=nearest(cand,pos);
+  }catch(e){}
+  if(hit){hit.classList.add('al');hit.scrollIntoView({block:'nearest'})}
+  else{const c=Math.round(pos);theirs.slice(Math.max(0,c-1),c+2).forEach(x=>x.classList.add('ap'))}
+}
+
+/* ---------- Marque-pages ---------- */
+const BOOKFR={Genesis:'Genèse',Exodus:'Exode',Leviticus:'Lévitique',Numbers:'Nombres',Deuteronomy:'Deutéronome'};
+const PARFR={bereshit:'Béréchit',bereishit:'Béréchit',noach:'Noa’h',lechlecha:'Lekh Lekha',vayera:'Vayéra',chayeisarah:'’Hayé Sarah',chayeisara:'’Hayé Sarah',toldot:'Toledot',vayetzei:'Vayétsé',vayishlach:'Vayichla’h',vayeshev:'Vayéchev',miketz:'Mikets',vayigash:'Vayigach',vayechi:'Vaye’hi',
+shemot:'Chemot',vaera:'Vaéra',bo:'Bo',beshalach:'Bechala’h',yitro:'Yitro',mishpatim:'Michpatim',terumah:'Teroumah',tetzaveh:'Tetsavé',kitisa:'Ki Tissa',vayakhel:'Vayakhel',pekudei:'Pekoudé',
+vayikra:'Vayikra',tzav:'Tsav',shmini:'Chemini',tazria:'Tazria',metzora:'Metsora',achreimot:'A’haré Mot',kedoshim:'Kedochim',emor:'Emor',behar:'Behar',bechukotai:'Be’houkotaï',
+bamidbar:'Bamidbar',nasso:'Nasso',behaalotcha:'Beha’alotekha',shlach:'Chela’h',korach:'Kora’h',chukat:'’Houkat',balak:'Balak',pinchas:'Pin’has',matot:'Matot',masei:'Massé',
+devarim:'Devarim',vaetchanan:'Vaet’hanan',eikev:'Ekev',reeh:'Réé',shoftim:'Chofetim',kiteitzei:'Ki Tétsé',kitetzei:'Ki Tétsé',kitavo:'Ki Tavo',nitzavim:'Nitsavim',vayeilech:'Vayélekh',vayelech:'Vayélekh',haazinu:'Haazinou',vezotheberachah:'Vézot Haberakha',vzothaberakhah:'Vézot Haberakha',vezothaberakhah:'Vézot Haberakha'};
+const parFr=en=>PARFR[(en||'').toLowerCase().replace(/[^a-z]/g,'')]||en||'';
+const bookFr=id=>{const b=id.replace(/ \d+:\d+$/,'');return BOOKFR[b]||b};
+const lbl=id=>bookFr(id)+' '+id.match(/\d+:\d+$/)[0];
+const fmtDate=t=>{const d=new Date(t);return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
+let toastT=0;
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',2200)}
+function addBM(card){
+  if(!card||!PAR)return;
+  const s=store(),L=s.bm||[],id=card.dataset.id;
+  if(L.some(b=>b.id==id)){toast('Déjà dans les marque-pages : '+lbl(id));return}
+  L.push({id,t:Date.now(),par:PAR.displayValue.en});s.bm=L;
+  if(put(s)){updBm();toast('Marque-page ajouté : '+lbl(id)+' · '+parFr(PAR.displayValue.en));navigator.vibrate&&navigator.vibrate(20)}
+}
+function updBm(){
+  const L=store().bm||[];$('#bmc').textContent=L.length;const h=$('#bmh');if(h)h.textContent=L.length?L.length+' enregistré'+(L.length>1?'s':''):'Aucun pour le moment';
+  const ids=new Set(L.map(b=>b.id));
+  document.querySelectorAll('.v').forEach(c=>{const t=c.querySelector('.tap[data-k="v"]');if(t)t.classList.toggle('bm',ids.has(c.dataset.id))});
+}
+function openBM(){
+  const L=(store().bm||[]).slice().sort((a,b)=>b.t-a.t),el=$('#bml');
+  el.innerHTML=L.length?'':'<div id="msg">Aucun marque-page.<br>Appui long sur un numéro de verset ou sur « Rachi » pour en ajouter un.</div>';
+  L.forEach(b=>{
+    const r=document.createElement('div');r.className='bmr';
+    r.innerHTML='<div class="i"><b>'+b.id.match(/\d+:\d+$/)[0]+'</b> — '+bookFr(b.id)+' · '+parFr(b.par)+'<small>'+fmtDate(b.t)+'</small></div><button aria-label="Supprimer">✕</button>';
+    r.querySelector('.i').onclick=()=>goBM(b);
+    r.querySelector('button').onclick=()=>{const s=store();s.bm=(s.bm||[]).filter(x=>x.id!=b.id);if(put(s)){updBm();openBM()}};
+    el.append(r);
+  });
+  $('#bm').style.display='flex';
+}
+function closeBM(){$('#bm').style.display='none'}
+async function goBM(b){
+  const m=b.id.match(/ (\d+):(\d+)$/),c=+m[1],v=+m[2],book=b.id.replace(/ \d+:\d+$/,'');
+  const inRange=r=>{const q=r.match(/^(.+?) (\d+):(\d+)-(?:(\d+):)?(\d+)$/);if(!q)return false;
+    const c1=+q[2],v1=+q[3],c2=q[4]?+q[4]:c1,v2=+q[5];
+    return (c>c1||(c==c1&&v>=v1))&&(c<c2||(c==c2&&v<=v2))};
+  const scrollTo_=()=>{const el=[...document.querySelectorAll('.v')].find(x=>x.dataset.id==b.id);if(el)el.scrollIntoView({block:'start'})};
+  closeBM();
+  if(SCREEN=='parasha'&&ALIYOT.length&&ALIYOT[0].startsWith(book)){
+    const i=ALIYOT.findIndex(inRange);if(i>=0){await load(i);scrollTo_();return}
+  }
+  try{
+    const n=(await bookNodes(book)).find(x=>inRange(x.ref));
+    if(n&&n.aliyot.length>=7){
+      const i=Math.max(0,n.aliyot.findIndex(inRange));
+      history.pushState({},'');ISWEEK=false;CURBOOK=book;
+      await startParasha(n.en,n.he,n.ref,n.aliyot,i);scrollTo_();return;
+    }
+  }catch(e){}
+  window.open('https://www.sefaria.org/'+b.id.replace(/ (\d+):(\d+)$/,'.$1.$2')+'?lang=bi','_blank');
+}
+
+/* ---------- Clic sur la référence du verset ou sur « Rachi » : traduction intégrale ---------- */
+document.addEventListener('click',e=>{
+  if(Date.now()-LP<800)return;
+  const oh=e.target.closest('.ohb');if(oh){openOH(oh.closest('.v'),oh.dataset.c);return}
+  const l=e.target.closest('.lamp');if(l){note(l.closest('.v'),l.dataset.n);return}
+  const t=e.target.closest('.tap');if(!t)return;
+  const card=t.closest('.v'),k=t.dataset.k;
+  if(k=='v'){const b=card.querySelector('.he'),ws=[...b.querySelectorAll('.w')];
+    const ev=card.dataset.ven;
+    if(ev)showPop(b.textContent,ws,'Traduction anglaise de Sefaria ('+card.dataset.venT+') traduite automatiquement en français – à vérifier',ev,'en');
+    else showPop(b.textContent,ws,'Pas de traduction anglaise sur Sefaria pour ce verset – traduction automatique de l’hébreu, à vérifier')}
+  else rashi(card);
+});
+loadWeek();showHome();history.replaceState({},'');
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
