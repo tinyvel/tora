@@ -89,16 +89,70 @@ header{position:relative}
 #fl{position:absolute;right:4px;top:8px;display:flex}
 #fl span{font-size:1.25rem;padding:6px 5px;opacity:.35;cursor:pointer;line-height:1}
 #fl span.on{opacity:1}
+
+#gdb{color:var(--ac);text-decoration:underline;font-size:.85rem;cursor:pointer;padding:6px;display:inline-block}
+.wl{padding:4px 4px 10px}
+.hb.ent{text-align:center;font-weight:600;color:#333;background:linear-gradient(#f6f6f6,#d8d8d8);border:1px solid #b5b5b5;border-radius:12px;box-shadow:0 4px 0 #a0a0a0,0 6px 10px rgba(0,0,0,.28);transition:transform .08s,box-shadow .08s}
+.hb.ent:active{transform:translateY(3px);box-shadow:0 1px 0 #a0a0a0,0 2px 4px rgba(0,0,0,.25)}
+.blk.sec{margin-top:0}
+.wv{text-align:center;color:var(--ac);font-weight:600;margin-top:2px}
+.wdt{text-align:center;color:var(--mu);font-size:.9rem;margin:4px 0 10px;min-height:1.3em}
+.wl h2{color:var(--ac);font-size:1.05rem;margin:1.2em 0 .3em}
+.wl ul{margin:.2em 0;padding-left:1.2em}
+.wl li{margin:.3em 0}
+.wl p{margin:.3em 0;line-height:1.5}
+.wl .fn{color:var(--mu);font-size:.8rem;margin-top:1.4em;border-top:1px solid var(--bd);padding-top:8px}
+.wl a.ct{color:var(--ac);text-decoration:underline;cursor:pointer;padding:8px 0;display:inline-block}
+#gd{position:fixed;inset:0;background:var(--bg);z-index:25;display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+#gdc{flex:1 1 0;overflow-y:auto;padding:12px 16px calc(20px + env(safe-area-inset-bottom));line-height:1.55;-webkit-user-select:text;user-select:text}
+#gdc h3{color:var(--ac);margin:1.1em 0 .3em;font-size:1.05rem}
+#gdc ul{margin:.2em 0;padding-left:1.2em}
+#gdc li{margin:.25em 0}
+#gd .x{border:0;background:none;font-size:1.8rem;color:var(--mu);padding:0 4px}
 </style></head><body>
-<header><button id="back" onclick="history.back()">‹ Retour</button><div id="fl"><span data-l="fr" onclick="setLang('fr')">🇫🇷</span><span data-l="en" onclick="setLang('en')">🇬🇧</span></div><h1 id="t">Étude de la Torah</h1><div id="sub"></div><a id="bmb" onclick="openBM()">🔖 Marque-pages (<span id="bmc">0</span>)</a></header>
+<header><button id="back" onclick="history.back()">‹ Retour</button><div id="fl"><span data-l="fr" onclick="setLang('fr')">🇫🇷</span><span data-l="en" onclick="setLang('en')">🇬🇧</span></div><h1 id="t">Étude de la Torah</h1><div id="sub"></div><a id="bmb" onclick="openBM()">🔖 Marque-pages (<span id="bmc">0</span>)</a> <a id="gdb" onclick="openGD()">❓ Guide rapide</a></header>
 <div id="days"></div>
 <main id="m"><div id="msg">Chargement…</div></main>
 <footer id="bk"><a onclick="exportC()">⬇ Sauvegarder mes notes, corrections et marque-pages</a><a onclick="importC()">⬆ Restaurer</a></footer>
 <div id="pop"><button class="x" onclick="closePop()" aria-label="Fermer">×</button><div class="o"></div><div class="f"></div><textarea id="ed"></textarea><div id="act"><button id="b1"></button><button id="b2"></button></div><small id="nt">Traduction automatique – à vérifier</small></div>
 <div id="oh"><div class="ohh"><b id="oht"></b><button class="x" onclick="history.back()" aria-label="Fermer">×</button></div><div class="ohp" id="ohHe"></div><div class="ohp" id="ohFr"></div><div id="oha"><button id="oc1"></button><button id="oc2"></button></div><small id="ohn"></small></div>
 <div id="bm"><div class="ohh"><b>Marque-pages</b><button class="x" onclick="history.back()" aria-label="Fermer">×</button></div><div class="ohp" id="bml"></div></div>
+<div id="gd"><div class="ohh"><b>Guide rapide · v<span class="gv"></span></b><button class="x" onclick="history.back()" aria-label="Fermer">×</button></div><div id="gdc">
+<h3>📖 Choisir un texte</h3><ul>
+<li><b>Paracha de la semaine</b> : ouvre le bloc du jour (dimanche = 1er, … chabbat = 7e). Les boutons du haut permettent de lire un autre jour.</li>
+<li><b>Houmach</b> : choisissez un livre, puis une parachat (découpée en 7 blocs).</li></ul>
+<h3>🔤 Lire un verset</h3><ul>
+<li>Chaque verset montre l’hébreu, le Targoum Onkelos (araméen) et Rachi.</li>
+<li><b>Appui court sur un mot</b> : sa traduction. <b>Appui long puis glissement</b> : sélection pour copier-coller.</li>
+<li><b>Toucher le numéro du verset</b> : traduction du verset. <b>Toucher « Rachi »</b> : traduction du commentaire.</li>
+<li><b>🇫🇷 / 🇬🇧</b> (en haut à droite) : langue des traductions.</li></ul>
+<h3>🔁 Chnayim mikra ve’ehad targoum</h3><ul>
+<li>Lire deux fois chaque verset, puis une fois son Targoum. Ce bouton (2ᵉ de l’écran principal) ouvre le bloc du jour avec chaque verset affiché deux fois.</li>
+<li>La seconde lecture est « sèche » : sans numéro, sans commentateurs, sans traduction ni appui.</li></ul>
+<h3>📚 Autres commentateurs</h3><ul>
+<li><b>O.H.</b> Or HaChaïm, <b>RMBN</b> Ramban et <b>T.T.</b> Torah Temimah (quand ils existent), près du numéro. <b>S.H.</b> Siftei Chakhamim et <b>G.A.</b> Gur Aryeh, près de Rachi.</li>
+<li><b>T.T.</b> : chaque entrée donne la citation du Talmud ou du midrach avec sa source, puis la note de l’auteur (Baroukh Halévy Epstein) repérée par une lettre, par exemple [ט].</li>
+<li>Hébreu en haut, traduction en bas. Un appui sur un mot met en évidence son équivalent approximatif de l’autre côté.</li>
+<li>Retour arrière du téléphone : ferme la fenêtre.</li></ul>
+<h3>✎ Corriger une traduction</h3><ul>
+<li>Dans la fenêtre d’un commentaire, « ✎ Corriger » permet de modifier le texte. Votre version est conservée. « ↺ Rétablir l’automatique » l’efface.</li></ul>
+<h3>💡 Notes</h3><ul>
+<li>Touchez la lampe à côté du numéro de verset ou de « Rachi » pour écrire une note. La lampe s’allume quand une note existe.</li></ul>
+<h3>📍 Marque-pages</h3><ul>
+<li><b>Appui long sur le numéro du verset</b> ou sur le nom d’un commentateur : ajoute un marque-page (📍).</li>
+<li>La liste (en haut de page ou sur l’écran d’accueil) permet de rejoindre le verset ou de le supprimer avec ✕.</li></ul>
+<h3>💾 Vos données</h3><ul>
+<li>Notes, corrections et marque-pages restent sur votre appareil, sans synchronisation.</li>
+<li>En bas de page : <b>Sauvegarder</b> crée un fichier, <b>Restaurer</b> le recharge (pour changer d’appareil, par exemple).</li></ul>
+<h3>⚠ À savoir</h3><ul>
+<li>Les traductions sont automatiques et peuvent contenir des erreurs.</li>
+<li>Une connexion internet est nécessaire.</li>
+<li>Certaines parachiot doubles n’ont pas le découpage en 7 blocs.</li></ul>
+</div></div>
 <div id="toast"></div>
 <script>
+const VERSION='0.3 bêta';
+let DBL=false;
 const $=s=>document.querySelector(s), API='https://www.sefaria.org/api/';
 const JOURS=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Chabbat'];
 const NOMS=['Rishon','Chéni','Chlichi','Révi’i','Hamichi','Chichi','Chévi’i'];
@@ -118,10 +172,14 @@ function scr(t,sub,o){
   $('#back').style.display=o.back?'block':'none';
   $('#days').style.display=o.days?'flex':'none';
   $('#bmb').style.display=o.bm?'inline-block':'none';
+  $('#gdb').style.display=o.welcome?'none':'inline-block';
+  $('#fl').style.display=o.welcome?'none':'flex';
+  $('#bk').style.display=o.welcome?'none':'';
   window.scrollTo(0,0);closePop();
 }
 function go(fn,...a){history.pushState({},'');return fn(...a)}
 window.addEventListener('popstate',()=>{
+  if($('#gd').style.display=='flex'){closeGD();return}
   if($('#bm').style.display=='flex'){closeBM();return}
   if($('#oh').style.display=='flex'){closeOH();return}
   if($('#pop').style.display=='block'){closePop();history.pushState({},'');return}
@@ -131,18 +189,41 @@ function goBack(){
   if(SCREEN=='parasha'){if(ISWEEK)showHome();else showParashot(CURBOOK)}
   else if(SCREEN=='plist')showBooks();
   else if(SCREEN=='books')showHome();
+  else if(SCREEN=='home')showWelcome();
 }
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const refFr=r=>r.replace(/^[A-Za-z ]+(?= \d)/,b=>BOOKFR[b]||b);
 
+function weekDates(){
+  const d=new Date(),s=new Date(d.getFullYear(),d.getMonth(),d.getDate()-d.getDay()),e=new Date(s.getFullYear(),s.getMonth(),s.getDate()+6);
+  const f=x=>x.toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+  return 'du dimanche '+f(s)+' au chabbat '+f(e)+' '+e.getFullYear();
+}
+function mailAuthor(){const a=['tinyvel.sellam','gmail.com'].join('@');location.href='mailto:'+a+'?subject='+encodeURIComponent('TORA '+VERSION)}
+function showWelcome(){
+  SCREEN='welcome';scr('Parachat Hachavoua','',{welcome:true});
+  $('#m').innerHTML='<div class="wl"><div class="wv">Version '+VERSION+'</div><div class="wdt" id="wkw"></div>'
+   +'<button class="hb ent" onclick="go(showHome)">Entrée</button>'
+   +'<h2>Objectif</h2><p>Étudier chaque jour la paracha de la semaine (<i>Chnayim mikra ve’ehad targoum</i>) : texte hébreu, Targoum Onkelos et Rachi, avec un accès facilité aux autres commentateurs.</p>'
+   +'<h2>Fonctions</h2><ul><li>Traduction bilingue français / anglais (*)</li><li>Marque-pages pour poursuivre l’étude</li><li>Questions et réflexions personnelles sur un verset ou un commentaire</li><li>Correction personnelle d’une traduction</li></ul>'
+   +'<h2>Auteurs</h2><ul><li><b>Yvel</b> : conception, idées, tests et choix des fonctions</li><li><b>Claude</b> (Anthropic) : programmation et rédaction</li></ul>'
+   +'<h2>Contact</h2><p>Suggestions, remarques, bugs :<br><a class="ct" onclick="mailAuthor()">✉ Écrire à l’auteur</a></p>'
+   +'<p class="fn">(*) Textes hébreux, araméens et anglais : Sefaria (www.sefaria.org), chaque texte avec sa licence. Traductions françaises : automatiques (Google, MyMemory en secours), à vérifier ; elles ne remplacent pas une traduction humaine.</p></div>';
+  wkSub();
+}
+function openGD(){if($('#gd').style.display!='flex')history.pushState({},'');document.querySelectorAll('.gv').forEach(e=>e.textContent=VERSION);$('#gd').style.display='flex';$('#gdc').scrollTop=0}
+function closeGD(){$('#gd').style.display='none'}
 function showHome(){
   SCREEN='home';scr('Étude de la Torah','',{});
   $('#m').innerHTML='<button class="hb" onclick="go(openWeek)">📖 Paracha de la semaine<small id="wk">Chargement…</small></button>'
+   +'<button class="hb" onclick="go(openWeek,true)">🔁 Chnayim mikra ve’ehad targoum<small id="wk2">Chargement…</small></button>'
    +'<button class="hb" onclick="go(showBooks)">📚 Houmach<small>Les cinq livres et leurs parachiot</small></button>'
    +'<button class="hb" onclick="openBM()">🔖 Marque-pages<small id="bmh"></small></button>';
   wkSub();updBm();
 }
 function wkSub(){
+  const w=$('#wkw');if(w)w.textContent=(WEEK?'Paracha de la semaine : '+parFr(WEEK.item.displayValue.en)+' · ':'')+weekDates();
+  const e2=$('#wk2');if(e2)e2.textContent=WEEK?parFr(WEEK.item.displayValue.en)+' · '+(WEEK.item.displayValue.he||''):(WEEK===false?'Indisponible – vérifiez la connexion':'Chargement…');
   const e=$('#wk');if(!e)return;
   e.textContent=WEEK?parFr(WEEK.item.displayValue.en)+' · '+(WEEK.item.displayValue.he||''):(WEEK===false?'Indisponible – vérifiez la connexion':'Chargement…');
 }
@@ -190,14 +271,15 @@ function loadWeek(){
     wkSub();return WEEK;
   })();
 }
-async function openWeek(){
-  ISWEEK=true;SCREEN='parasha';scr('Paracha de la semaine','Chargement…',{back:true});
+async function openWeek(d){
+  DBL=d===true;ISWEEK=true;SCREEN='parasha';scr(DBL?'Chnayim mikra ve’ehad targoum':'Paracha de la semaine','Chargement…',{back:true});
   $('#m').innerHTML='<div id="msg">Chargement…</div>';
   const w=await loadWeek();
   if(!w){fail(new Error(WEEKERR||'Hors connexion'));return}
   return startParasha(w.item.displayValue.en,w.item.displayValue.he,w.item.ref,w.aliyot,TODAY);
 }
 function openList(book,i){
+  DBL=false;
   const n=IDX[book][i];ISWEEK=false;CURBOOK=book;
   if(n.aliyot.length<7){SCREEN='parasha';scr(parFr(n.en),'',{back:true});$('#m').innerHTML='<div id="msg">Découpage en 7 blocs indisponible pour cette parachat.</div>';return}
   return startParasha(n.en,n.he,n.ref,n.aliyot,0);
@@ -224,7 +306,7 @@ async function load(i){
       return {he:[].concat(d.he||[]),en:[].concat(d.text||[]),v:d.versionTitle||'Sefaria'}}catch(e){return {he:[],en:[],v:''}}};
     const out=document.createDocumentFragment();
     for(let c=c1;c<=c2;c++){
-      const [hr,ta,rr,oc,sc,ga,rm]=await Promise.all([getR(book+' '+c),get('Onkelos '+book+' '+c),getR('Rashi on '+book+' '+c),getR('Or HaChaim on '+book+' '+c),getR('Siftei Chakhamim, '+book+' '+c),getR('Gur Aryeh on '+book+' '+c),getR('Ramban on '+book+' '+c)]);
+      const [hr,ta,rr,oc,sc,ga,rm,tt]=await Promise.all([getR(book+' '+c),get('Onkelos '+book+' '+c),getR('Rashi on '+book+' '+c),getR('Or HaChaim on '+book+' '+c),getR('Siftei Chakhamim, '+book+' '+c),getR('Gur Aryeh on '+book+' '+c),getR('Ramban on '+book+' '+c),getR('Torah Temimah on Torah, '+book+' '+c)]);
       const he=hr.he,ra=rr.he,a=c==c1?v1:1,b=c==c2?v2:he.length;
       for(let v=a;v<=b;v++){
         const card=document.createElement('div');card.className='v';let ev=[].concat(hr.en[v-1]||[]).flat(9).map(plain).filter(Boolean).join(' ');
@@ -250,9 +332,12 @@ async function load(i){
         card.dataset.rm=JSON.stringify(rx.map(x=>x[0]));
         card.dataset.rmen=JSON.stringify(rx.map(x=>((x[1].match(/[A-Za-z]/g)||[]).length>(x[1].match(/[\u05D0-\u05EA]/g)||[]).length)?x[1]:''));
         card.dataset.rmv=rm.v;
+        const ttH=[].concat(tt.he[v-1]||[]).flat(9).filter(x=>x&&/[\u05D0-\u05EA]/.test(x)).map(ttConv);
+        card.dataset.tt=JSON.stringify(ttH);card.dataset.tten=JSON.stringify(ttH.map(()=>''));card.dataset.ttv=tt.v;
         card.dataset.oh=JSON.stringify(ohH);card.dataset.ohen=JSON.stringify(ohE);card.dataset.ohv=oc.v;
-        card.innerHTML='<div class="vn"><span class="tap" data-k="v">'+c+':'+v+'</span><span class="lamp" data-n="nv" title="Ma note sur ce verset">💡</span>'+(card.dataset.oh!='[]'?'<span class="ohb" data-c="oh" title="Or HaChaïm">O.H.</span>':'')+(card.dataset.rm!='[]'?'<span class="ohb" data-c="rm" title="Ramban">RMBN</span>':'')+'</div>';
+        card.innerHTML='<div class="vn"><span class="tap" data-k="v">'+c+':'+v+'</span><span class="lamp" data-n="nv" title="Ma note sur ce verset">💡</span>'+(card.dataset.oh!='[]'?'<span class="ohb" data-c="oh" title="Or HaChaïm">O.H.</span>':'')+(card.dataset.rm!='[]'?'<span class="ohb" data-c="rm" title="Ramban">RMBN</span>':'')+(card.dataset.tt!='[]'?'<span class="ohb" data-c="tt" title="Torah Temimah">T.T.</span>':'')+'</div>';
         card.append(blk('he','',he[v-1]));
+        if(DBL){const d2=document.createElement('div');d2.className='blk he sec';d2.textContent=plain(he[v-1]);card.append(d2)}
         const t=ta[v-1];if(t)card.append(blk('ar','Targoum Onkelos (araméen)',t));
         const r=[].concat(ra[v-1]||[]).flat(9).filter(Boolean);
         if(r.length)card.append(blk('ra','Rachi',r.map(x=>'<p>'+x+'</p>').join('')));
@@ -266,6 +351,19 @@ async function load(i){
     }
     $('#m').innerHTML='';$('#m').append(out);window.scrollTo(0,0);updLamps();updBm();
   }catch(e){fail(e)}
+}
+function ttConv(h){
+  const b=new DOMParser().parseFromString('<body>'+h,'text/html').body,notes=[];
+  b.querySelectorAll('sup.footnote-marker').forEach(m=>{
+    const l=m.textContent.trim(),n=m.nextElementSibling;let t='';
+    if(n&&n.matches('i.footnote')){t=n.innerHTML;n.remove()}
+    m.replaceWith(' ['+l+'] ');notes.push([l,t]);
+  });
+  b.querySelectorAll('sup,script,style,img,iframe').forEach(e=>e.remove());
+  b.querySelectorAll('i.footnote').forEach(e=>e.remove());
+  let o=b.innerHTML;
+  notes.forEach(([l,t])=>{o+='<br><br><b>['+l+']</b> '+t});
+  return o;
 }
 function plain(h){
   if(!h)return '';
@@ -471,7 +569,7 @@ function ohRender(){
 }
 async function openOH(card,K){
   if($('#oh').style.display!='flex')history.pushState({},'');
-  K=K||'oh';const NAME={sc:'Siftei Chakhamim',ga:'Gur Aryeh',rm:'Ramban'}[K]||'Or HaChaïm';$('#oha').style.display=LANG=='en'?'none':'flex';
+  K=K||'oh';const NAME={sc:'Siftei Chakhamim',ga:'Gur Aryeh',rm:'Ramban',tt:'Torah Temimah'}[K]||'Or HaChaïm';$('#oha').style.display=LANG=='en'?'none':'flex';
   clearAl();
   const heL=JSON.parse(card.dataset[K]||'[]'),enL=JSON.parse(card.dataset[K+'en']||'[]');
   const same=enL.length&&enL.length===heL.length;
@@ -501,7 +599,7 @@ async function openOH(card,K){
   await Promise.all(groups.map(async(g,i)=>{
     const f=F.querySelector('.pa[data-i="'+i+'"]');
     try{
-      const e=g.en.join('\n').trim();const txt=e?await tr(e,'en'):await tr(g.he.map(plain).join('\n'));
+      const e=g.en.join('\n').trim();const txt=e?await tr(e,'en'):await tr(g.he.map(x=>K=='tt'?x.split(/<br\s*\/?>/i).map(plain).filter(Boolean).join('\n'):plain(x)).join('\n'));
       if(OHC!==ctx)return;
       ctx.texts[i]=txt;f.innerHTML='';
       txt.split('\n').forEach(line=>{const p=document.createElement('p');wrapFr(p,line);f.append(p)});
@@ -576,7 +674,7 @@ const lbl=id=>bookFr(id)+' '+id.match(/\d+:\d+$/)[0];
 const fmtDate=t=>{const d=new Date(t);return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
 let toastT=0;
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',2200)}
-const KN={v:'',ra:'Rachi',oh:'Or HaChaïm',sc:'Siftei Chakhamim',ga:'Gur Aryeh',rm:'Ramban'};
+const KN={v:'',ra:'Rachi',oh:'Or HaChaïm',sc:'Siftei Chakhamim',ga:'Gur Aryeh',rm:'Ramban',tt:'Torah Temimah'};
 const bk=b=>b.id+'|'+(b.k||'v');
 function addBM(card,k){
   if(!card||!PAR)return;k=k||'v';
@@ -618,7 +716,7 @@ async function goBM(b){
     if(n&&n.aliyot.length>=7){
       const i=Math.max(0,n.aliyot.findIndex(inRange));
       closeBM();ISWEEK=false;CURBOOK=book;
-      await startParasha(n.en,n.he,n.ref,n.aliyot,i);scrollTo_();return;
+      DBL=false;await startParasha(n.en,n.he,n.ref,n.aliyot,i);scrollTo_();return;
     }
   }catch(e){}
   history.back();
@@ -641,6 +739,6 @@ document.addEventListener('click',e=>{
     else showPop(b.textContent,ws,'Pas de traduction anglaise sur Sefaria pour ce verset – traduction automatique de l’hébreu, à vérifier')}
   else rashi(card);
 });
-updFl();loadWeek();showHome();history.replaceState({},'');
+updFl();loadWeek();showWelcome();history.replaceState({},'');
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

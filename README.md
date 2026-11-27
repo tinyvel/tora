@@ -6,10 +6,14 @@ Adresse du site : https://tinyvel.github.io/tora/
 
 ## Fonctions
 
-**Écran d'accueil**
+**Page d'accueil** : titre, version (0.3 bêta), dates de la semaine, objectif, fonctions, auteurs, contact et origine des textes, avec un bouton « Entrée ».
+
+**Écran principal**
 - **Paracha de la semaine** : le bloc du jour (dimanche = 1er bloc, …, chabbat = 7e), avec des boutons pour lire un autre bloc.
 - **Houmach** : les cinq livres, puis la liste des parachiot de chaque livre, puis la parachat avec les mêmes fonctions que celle de la semaine.
 - **Marque-pages** : la liste enregistrée.
+- **Chnayim mikra ve'ehad targoum** : le bloc du jour avec chaque verset hébreu affiché deux fois ; la seconde occurrence est « sèche » (sans numéro, sans commentateurs, sans traduction ni appui).
+- **❓ Guide rapide** : mode d'emploi succinct, accessible depuis cet écran et les suivants.
 
 **Pour chaque verset**
 - Texte hébreu, Targoum Onkelos (araméen), commentaire de Rachi.
@@ -25,12 +29,13 @@ Adresse du site : https://tinyvel.github.io/tora/
 - **S.H.** : Siftei Chakhamim.
 - **G.A.** : Gur Aryeh.
 - **RMBN** : Ramban (quand il existe pour le verset).
+- **T.T.** : Torah Temimah (quand il existe pour le verset) : citation du Talmud ou du midrach, puis la note de l'auteur, réunies dans la même fenêtre.
 
 Chaque lien ouvre une fenêtre avec l'hébreu en haut et le français en bas. Un appui sur un mot met en évidence son équivalent approximatif dans l'autre zone. La traduction française est modifiable et la correction est conservée.
 
 ## Sources
 
-- **Textes et calendrier : [Sefaria](https://www.sefaria.org)**. Parachat de la semaine, découpage en 7 blocs, texte hébreu, Onkelos, Rachi, Or HaChaïm, Siftei Chakhamim, Gur Aryeh, listes des parachiot. Les textes sont téléchargés à chaque ouverture et ne sont pas stockés dans ce dépôt. Chaque texte a sa propre licence, indiquée sur Sefaria.
+- **Textes et calendrier : [Sefaria](https://www.sefaria.org)**. Parachat de la semaine, découpage en 7 blocs, texte hébreu, Onkelos, Rachi, Or HaChaïm, Siftei Chakhamim, Gur Aryeh, Ramban, Torah Temimah (édition Vilna 1904, domaine public), listes des parachiot. Les textes sont téléchargés à chaque ouverture et ne sont pas stockés dans ce dépôt. Chaque texte a sa propre licence, indiquée sur Sefaria.
 - **Siftei Chakhamim** : édition « Sifsei Chachomim Chumash », Metsudah Publications, 2009, selon Sefaria.
 - **Traductions françaises** : automatiques, avec le traducteur en ligne de Google (adresse publique non officielle) et MyMemory en secours. L'application traduit en priorité l'anglais fourni par Sefaria, qui donne de meilleurs résultats que l'hébreu. Ces traductions peuvent contenir des erreurs et ne remplacent pas une traduction humaine.
 
@@ -65,5 +70,5 @@ Le site est publié par GitHub Pages depuis la branche `main`, dossier racine.
 
 ## À faire
 
-- Mettre à jour le guide d'utilisation.
+- Faire évoluer le guide rapide avec les prochaines versions.
 - Optimiser le code : supprimer le code mort, regrouper les parties dupliquées, mettre en mémoire les textes déjà chargés.
